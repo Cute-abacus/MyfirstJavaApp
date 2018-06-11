@@ -1,0 +1,10 @@
+package entity;
+
+public class Test {
+	//The servlets named [servlet.changecodeServlet] and [servlet.changeQuestionAnwserServlet] are both mapped 
+	//to the url-pattern [/changecodeServlet] which is not permitted
+	//Date date=new Date();//取得当前时间
+	//SimpleDateFormat tempDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	//String datetime = tempDate.format(date); //格式化
+	//setDate(new java.sql.Date.valueOf(datetime ));//把字符转转换成Date类型。
+}

@@ -1,0 +1,6 @@
+package entity;
+
+public class Test {
+	//The servlets named [servlet.changecodeServlet] and [servlet.changeQuestionAnwserServlet] are both mapped 
+	//to the url-pattern [/changecodeServlet] which is not permitted
+}

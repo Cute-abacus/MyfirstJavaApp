@@ -1,0 +1,54 @@
+package servlet;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import entity.User;
+
+/**
+ * Servlet implementation class changecodeServlet
+ */
+@WebServlet("/changecodeServlet")
+public class changecodeServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public changecodeServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request,response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.setContentType("text/html;charset=utf-8");
+		String new_code=null;
+		String check_code=null;
+		User u=(User)request.getSession().getAttribute("user");
+		new_code=request.getParameter("user_newcode1");
+		check_code=request.getParameter("user_newcode2");
+		if(new_code==null) {
+			request.getRequestDispatcher("../重设密码为空.jsp").forward(request, response);
+		}
+		if(!new_code.equals(check_code)) {
+			request.getRequestDispatcher("../重设密码不相等.jsp").forward(request, response);
+		}
+	}
+
+}

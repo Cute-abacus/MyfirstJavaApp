@@ -1,0 +1,196 @@
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.Date;
+import db.DBUtil;
+import entity.Test;
+import entity.User;
+/* *
+ * Date date=new Date();//取得当前时间
+ * SimpleDateFormat tempDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+ * String datetime = tempDate.format(date); //格式化
+ * setDate(new java.sql.Date.valueOf(datetime ));//把字符转转换成Date类型。
+ * 
+ * */
+public class TestDAO {
+	
+	public boolean addTest(Test t) throws Exception 
+	{
+		if(get(t.getTest_id())!=null) {
+			System.out.println("has exist");
+			return false;
+		}
+		Connection conn=DBUtil.getConnection();
+		String sql="" +
+					"insert into test_info" +
+					"(test_id,test_name,test_rstart," +
+					"test_rover,test_pstart,test_pover,test_time)" +
+					"values(" +
+					"?,?,?,?,?,?,?)";
+		PreparedStatement ptmt=conn.prepareStatement(sql);
+        ptmt.setInt(1, t.getTest_id());
+        ptmt.setString(2, t.getTest_name());
+        ptmt.setDate(3, t.getTest_rstart());
+        ptmt.setDate(4, t.getTest_rover());
+        ptmt.setDate(5, t.getTest_pstart());
+        ptmt.setDate(6, t.getTest_pover()); 
+        ptmt.setDate(7, t.getTest_time());
+        ptmt.execute();
+        
+        String sql1=""+
+    				"insert into test_attribute"+
+    				"(test_id,attribute_id)"+
+    				"values(" +
+    				"?,?)";
+        PreparedStatement ptmt1=conn.prepareStatement(sql1);
+        ptmt1.setInt(1, t.getTest_id());
+        ptmt1.setInt(2, t.getAttribute_id());
+        ptmt1.execute();
+        
+        String sql2=""+
+        			"create table "+t.getTest_name()+"_sign "+
+        			"(test_id int(11) not null,user_id varchar(255) not null,"+
+        			"user_name varchar(255) not null,"+
+        			"attribute_id int(11),pay int(11),"+
+        			"resign_id int(11), attribute_answer varchar(255)"
+        			+ "PRIMARY KEY (user_id)) ";
+        PreparedStatement ptmt2=conn.prepareStatement(sql2);		
+        ptmt2.executeUpdate();
+        
+        return true;	
+	}
+	public Test get(Integer id) throws SQLException {
+		//传入该考试id获取考试实体信息
+		Test t =null;
+		Connection conn=DBUtil.getConnection();
+		String sql="" +
+				" select * from test_info " +
+				" where test_id=?";
+		PreparedStatement ptmt=conn.prepareStatement(sql);
+		ptmt.setInt(1, id);
+		ResultSet rs=ptmt.executeQuery();
+		String sql1="" +
+				" select * from test_attribute " +
+				" where test_id=?";
+		PreparedStatement ptmt1=conn.prepareStatement(sql1);
+		ptmt1.setInt(1, id);
+		ResultSet rs1=ptmt1.executeQuery();
+		while(rs.next()){
+			t=new Test();
+			t.setTest_id(rs.getInt("test_id"));
+			t.setTest_name(rs.getString("test_name"));
+			t.setTest_pover(rs.getDate("test_pover"));
+			t.setTest_pstart(rs.getDate("test_pstart"));
+			t.setTest_rover(rs.getDate("test_rover"));
+			t.setTest_rstart(rs.getDate("test_rstart"));
+			t.setTest_time(rs.getDate("test_time"));
+		}
+		while(rs1.next()) {
+			t.setTest_id(rs1.getInt("test_id"));
+		    t.setAttribute_id(rs1.getInt("attribute_id"));
+			
+		}
+		return t;
+		
+	}
+	public List<User> query(int test_id) throws SQLException {
+		Test t= new Test();
+		t=get(test_id);
+		Connection conn=DBUtil.getConnection();
+		//返回某个已发布的考试项目的全部用户信息
+		Statement stmt=conn.createStatement();
+		String sql="select user_id, user_name from ?";
+		PreparedStatement ptmt=conn.prepareStatement(sql);
+		ptmt.setString(1, );
+		ResultSet rs=stmt.executeQuery(sql);
+		List<User> gs=new ArrayList<User>();
+		User u=null;
+		while(rs.next())
+		{
+			u=new User();
+			u.setUser_id(rs.getString("User_id"));
+			u.setUser_name(rs.getString("User_name"));
+			gs.add(u);
+		}
+		return gs;
+	}
+	
+	public List<Test> queryTest() throws SQLException{
+		Connection conn=DBUtil.getConnection();
+		Statement stmt=conn.createStatement();
+		String sql=""+
+				"select test_name, test_rstart,test_rover,"+
+				"test_pstart,test_pover,test_time"+
+				"from test_info ";
+		ResultSet rs=stmt.executeQuery(sql);
+		List<Test> gs=new ArrayList<Test>();
+		Test t=new Test();
+		while(rs.next()) {
+			
+			t.setTest_id(rs.getInt("test_id"));
+			t.setAttribute_id(get_attributeId(t.getTest_id()));
+			t.setTest_name(rs.getString("test_name"));
+			t.setTest_pover(rs.getDate("test_pover"));
+			t.setTest_pstart(rs.getDate("rs.getDate"));
+			t.setTest_rover(rs.getDate("test_rover"));
+			t.setTest_rstart(rs.getDate("test_rstart"));
+			t.setTest_time(rs.getDate("test_time"));
+			t.setAttribute_answer(get_attributeName(t.getAttribute_id()));
+		}
+		return gs;
+		
+	}
+	public Integer get_testId(String test_name) throws SQLException
+	{
+		Connection conn=DBUtil.getConnection();
+		String sql="" +
+				" select test_id from test_name " +
+				" where test_name=?";
+		PreparedStatement ptmt=conn.prepareStatement(sql);
+		ptmt.setString(1, test_name);
+		ResultSet rs=ptmt.executeQuery();
+		Integer id=null;
+		while(rs.next()){
+			 id =  rs.getInt("test_id");
+			}
+		return id;
+	}
+	
+	public String get_attributeName(int id) throws SQLException {
+		Connection conn=DBUtil.getConnection();
+		String sql="" +
+				" select attribute_name from additional_attributes " +
+				" where attribute_id=?";
+		PreparedStatement ptmt=conn.prepareStatement(sql);
+		ptmt.setInt(1, id);
+		ResultSet rs=ptmt.executeQuery();
+		String name=null;
+		while(rs.next()){
+			 name =  rs.getString("attribute_name");
+			}
+		return name;
+	}
+	
+	public Integer get_attributeId(int id) throws SQLException {
+		Connection conn=DBUtil.getConnection();
+		String sql="" +
+				" select attribute_id from test_attribute " +
+				" where test_id=?";
+		PreparedStatement ptmt=conn.prepareStatement(sql);
+		ptmt.setInt(1, id);
+		ResultSet rs=ptmt.executeQuery();
+		Integer test_id=null;
+		while(rs.next()){
+			test_id =  rs.getInt("test_id");
+			}
+		return test_id;
+	}
+	
+}

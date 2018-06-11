@@ -1,0 +1,89 @@
+package servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.UserDAO;
+import entity.User;
+
+/**
+ * Servlet implementation class registerServlet
+ */
+@WebServlet("/registerServlet")
+public class registerServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public registerServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request,response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.setContentType("text/html;charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.println("<strong>here is my first jsp</string><br>");
+		User u=new User();
+		String user_id,user_name,user_sex, user_question,user_answer, user_number, user_nick, user_code,user_code_check;
+		int user_right;
+		try {
+			user_id=request.getParameter("user_name");
+			user_name=request.getParameter("user_name");
+			user_sex=request.getParameter("user_sex");
+			user_question=request.getParameter("user_question");
+			user_answer=request.getParameter("user_answer");
+			user_number=request.getParameter("user_number");
+			user_code=request.getParameter("user_code1");
+			user_code_check=request.getParameter("user_code2");
+			if(!user_code.equals(user_code_check)) {
+				out.println("两次密码输入不一致");
+				request.getRequestDispatcher("../注册.jsp").forward(request, response);
+			}
+			user_right=0;
+			user_nick=user_name;
+			u.setUser_answer(user_answer);
+			u.setUser_code(user_code);
+			u.setUser_id(user_id);
+			u.setUser_name(user_name);
+			u.setUser_nick(user_nick);
+			u.setUser_number(user_number);
+			u.setUser_question(user_question);
+			u.setUser_right(user_right);
+			u.setUser_sex(user_sex);
+			UserDAO m=new UserDAO();
+			boolean result=m.addUser(u);
+			if(result==true)
+			{
+				System.out.println("添加成功");
+				request.getRequestDispatcher("../注册判定.jsp").forward(request, response);
+			}
+			else {
+				System.out.println("添加失败");
+			}
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+}

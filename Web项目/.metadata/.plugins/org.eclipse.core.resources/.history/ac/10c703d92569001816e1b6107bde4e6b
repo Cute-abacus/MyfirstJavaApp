@@ -1,0 +1,63 @@
+package servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import entity.User;
+
+/**
+ * Servlet implementation class registerServlet
+ */
+@WebServlet("/registerServlet")
+public class registerServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public registerServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request,response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.setContentType("text/html;charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.println("<strong>here is my first jsp</string><br>");
+		User u=new User();
+		String user_id,user_name,user_sex, user_question,user_answer, user_number, user_nick, user_code;
+		int user_right;
+		try {
+			user_id=request.getParameter("user_name");
+			user_name=request.getParameter("user_name");
+			user_sex=request.getParameter("user_sex");
+			user_question=request.getParameter("user_question");
+			user_answer=request.getParameter("user_answer");
+			user_number=request.getParameter("user_number");
+			user_code=request.getParameter("user_code");
+			user_right=0;
+		}
+		catch(Exception ex) {
+			
+		}
+	}
+
+}

@@ -1,0 +1,91 @@
+package servlet;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class publishtestServlet
+ */
+@WebServlet("/publishtestServlet")
+public class publishtestServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public publishtestServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.setContentType("text/html;charset=utf-8");
+		Test t = new Test();
+		TestDAO t1 =new TestDAO();
+		Integer test_id=null;
+		String test_name =null;
+		Date test_pstart=null;
+		Date test_pover=null;
+		Date test_rstart=null;
+		Date test_rover=null;
+		Date test_time=null;
+		
+		try {
+			test_name=request.getParameter("test_name");
+			
+			if(test_name==null) {
+				System.out.print("wrong\n");
+			}
+		
+			test_id=t1.get_testid(test_name);
+			String time1,time2,time3,time4,time5;
+			
+			time1 = request.getParameter("test_pstart");
+			test_pstart=java.sql.Date.valueOf(time1);
+			
+			time2 = request.getParameter("test_pover");
+			test_pover=java.sql.Date.valueOf(time2);
+			
+			time3 = request.getParameter("test_rstart");
+			test_rstart=java.sql.Date.valueOf(time3);
+			
+			time4 = request.getParameter("test_rover");
+			test_rover=java.sql.Date.valueOf(time4);
+			
+			time5 = request.getParameter("test_time");
+			test_time=java.sql.Date.valueOf(time5);
+		
+		    t.setTest_id(test_id);
+		    t.setTest_name(test_name);
+		    t.setTest_pover(test_pover);
+		    t.setTest_pstart(test_pstart);
+		    t.setTest_rover(test_rover);
+		    t.setTest_rstart(test_rstart);
+		    t.setTest_time(test_time);
+		    t1.addTest(t);
+		    System.out.println("chenggong");
+		    
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
+}

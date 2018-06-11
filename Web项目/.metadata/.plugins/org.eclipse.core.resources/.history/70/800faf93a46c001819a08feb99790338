@@ -1,0 +1,68 @@
+package entity;
+
+import java.util.Date;
+import java.sql.Time;
+/*
+ * Date date=new Date();//取得当前时间
+   SimpleDateFormat tempDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+   String datetime = tempDate.format(date); //格式化
+   setDate(new java.sql.Date.valueOf(datetime ));//把字符转转换成Date类型。
+ */
+public class Test {
+	private Integer test_id;
+	private String test_name;
+	private Date test_rstart;
+	private Date test_rover;
+	private Date test_pstart;
+	private Date test_pover;
+	private Date test_time;
+	private int attribute_id;
+	public Integer getTest_id() {
+		return test_id;
+	}
+	public void setTest_id(Integer test_id) {
+		this.test_id = test_id;
+	}
+	public String getTest_name() {
+		return test_name;
+	}
+	public void setTest_name(String test_name) {
+		this.test_name = test_name;
+	}
+	public Date getTest_rstart() {
+		return test_rstart;
+	}
+	public void setTest_rstart(Date test_rstart) {
+		this.test_rstart = test_rstart;
+	}
+	public Date getTest_rover() {
+		return test_rover;
+	}
+	public void setTest_rover(Date test_rover) {
+		this.test_rover = test_rover;
+	}
+	public Date getTest_pstart() {
+		return test_pstart;
+	}
+	public void setTest_pstart(Date test_pstart) {
+		this.test_pstart = test_pstart;
+	}
+	public Date getTest_pover() {
+		return test_pover;
+	}
+	public void setTest_pover(Date test_pover) {
+		this.test_pover = test_pover;
+	}
+	public Date getTest_time() {
+		return test_time;
+	}
+	public void setTest_time(Date test_time) {
+		this.test_time = test_time;
+	}
+	public int getAttribute_id() {
+		return attribute_id;
+	}
+	public void setAttribute_id(int attribute_id) {
+		this.attribute_id = attribute_id;
+	}
+}

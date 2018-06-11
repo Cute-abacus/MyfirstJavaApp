@@ -1,0 +1,126 @@
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.Date;
+import db.DBUtil;
+import entity.Test;
+import entity.User;
+/* *
+ * Date date=new Date();//取得当前时间
+ * SimpleDateFormat tempDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+ * String datetime = tempDate.format(date); //格式化
+ * setDate(new java.sql.Date.valueOf(datetime ));//把字符转转换成Date类型。
+ * 
+ * */
+public class TestDAO {
+	
+	public void main(){
+		 java.util.Date date=new Date();//取得当前时间
+		 SimpleDateFormat tempDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		 String datetime = tempDate.format(date); //格式化
+		 setDate(new java.sql.Date.valueOf(datetime ));//把字符转转换成Date类型。
+	}
+	public boolean addTest(Test t) throws Exception 
+	{
+		if(get(t.getTest_id())!=null)
+			return false;//考试编号不能重复
+		Connection conn=DBUtil.getConnection();
+		String sql="" +
+					"insert into test_info" +
+					"(test_id,test_name,test_rstart," +
+					"test_rover,test_pstart,test_pover,test_time)" +
+					"values(" +
+					"?,?,?,?,?,?,?)";
+		PreparedStatement ptmt=conn.prepareStatement(sql);
+        ptmt.setInt(1, t.getTest_id());
+        ptmt.setString(2, t.getTest_name());
+        ptmt.setDate(3, t.getTest_rstart());
+        ptmt.setDate(4, t.getTest_rover());
+        ptmt.setDate(5, t.getTest_pstart());
+        ptmt.setDate(6, t.getTest_pover()); 
+        ptmt.execute();
+        
+        String sql1=""+
+    				"insert into test_attribute"+
+    				"(test_id,test_attribute)"+
+    				"values(" +
+    				"?,?)";
+        PreparedStatement ptmt1=conn.prepareStatement(sql1);
+        ptmt1.setInt(1, t.getTest_id());
+        ptmt1.setInt(2, t.getAttribute_id());
+        ptmt1.execute();
+        
+        String sql2=""+
+        			"creat table"+t.getTest_name()+"resign"+
+        			"(test_id int(11) not null,user_id varchar(255) not null,"+
+        			"attribute_id int(11),pay int(11),"+
+        			"resign_id int(11),PRIMARY KEY (resign_id)) ";
+        PreparedStatement ptmt2=conn.prepareStatement(sql2);		
+        ptmt2.execute();
+        
+        return true;	
+	}
+	public Test get(Integer id) throws SQLException{
+		Test t =null;
+		Connection conn=DBUtil.getConnection();
+		String sql="" +
+				" select * from test_info " +
+				" where test_id=?";
+		PreparedStatement ptmt=conn.prepareStatement(sql);
+		ptmt.setInt(1, id);
+		ResultSet rs=ptmt.executeQuery();
+		String sql1="" +
+				" select * from test_attribute " +
+				" where test_id=?";
+		PreparedStatement ptmt1=conn.prepareStatement(sql1);
+		ptmt1.setInt(1, id);
+		ResultSet rs1=ptmt1.executeQuery();
+		while(rs.next()){
+			t=new Test();
+			t.setTest_id(rs.getInt("test_id"));
+			t.setTest_name(rs.getString("test_name"));
+			t.setTest_pover(rs.getDate("test_pover"));
+			t.setTest_pstart(rs.getDate("test_pstart"));
+			t.setTest_rover(rs.getDate("test_rover"));
+			t.setTest_rstart(rs.getDate("test_rstart"));
+			t.setTest_time(rs.getDate("test_time"));
+		}
+		while(rs1.next()) {
+			t.setTest_id(rs1.getInt("test_id"));
+		    t.setAttribute_id(rs1.getInt("attribute_id"));
+			
+		}
+		return t;
+		
+	}
+	public List<Test> query(int test_id) {
+		Connection conn=DBUtil.getConnection();
+		//3.通过数据库的连接操作数据库，实现增删改查
+		Statement stmt=conn.createStatement();
+		ResultSet rs=stmt.executeQuery("select user_id,user_name from person_info ");
+		List<Test> gs=new ArrayList<Test>();
+		Test t=null;
+		while(rs.next())
+		{
+			t=new Test();
+			t.setTest_id(rs.getInt("test_id"));
+			t.setTest_name(test_name);
+			t.setAttribute_id(attribute_id);
+			t.setTest_pover(test_pover);
+			t.setTest_pstart(test_pstart);
+			t.setTest_rover(test_rover);
+			t.setTest_rstart(test_rstart);
+			t.setTest_time(test_time);
+			t.setUser_name(rs.getString("user_name"));
+		    t.setUser_id(rs.getString("user_id"));
+            gs.add();
+		}
+		return gs;
+	}
+}
